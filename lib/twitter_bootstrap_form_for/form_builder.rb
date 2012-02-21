@@ -92,7 +92,7 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
       classes << ('input-' + options.delete(:add_on).to_s) if options[:add_on]
 
       self.div_wrapper(attribute) do
-        template.concat self.label(attribute, label) if label
+        template.concat self.label(attribute, label, :class => 'control-label') if label
         template.concat template.content_tag(:div, :class => classes.join(' ')) {
           template.concat super(attribute, *(args << options))
           template.concat error_span(attribute)
@@ -107,20 +107,19 @@ class TwitterBootstrapFormFor::FormBuilder < ActionView::Helpers::FormBuilder
       label       = args.first.nil? ? '' : args.shift
       target      = self.object_name.to_s + '_' + attribute.to_s
       label_attrs = toggle == :check_box ? { :for => target, :class => 'checkbox' } : { :class => 'radio' }
-
-      template.content_tag(:li) do
+      template.content_tag(:div) do
         template.concat template.content_tag(:label, label_attrs) {
           template.concat super(attribute, *args)
           template.concat ' ' # give the input and span some room
           template.concat template.content_tag(:span, label)
         }
         if toggle == :check_box
-          template.concat template.content_tag(:div, :class => "clearfix error") {
+          template.concat template.content_tag(:div, :class => "control-group error") {
             template.concat error_span(attribute)
           } if errors_on?(attribute)
         end
       end
-    end
+     end
   end
 
   protected
